@@ -48,11 +48,4 @@ class UsuarioRequest extends FormRequest
             'nombre_usuario.max' => 'El nombre de usuario ha de tener menos de 255 caracteres',
         ];
     }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors()
-        ], 422));
-    }
 }
