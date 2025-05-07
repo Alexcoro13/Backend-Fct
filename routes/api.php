@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ComentariosController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,5 +19,9 @@ Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctu
 // Post routes
 Route::resource('posts', PostController::class)->middleware('auth:sanctum');
 
-//Entramientos routes
+//Entrenamientos routes
 Route::resource('entrenamientos', EntrenamientosController::class)->middleware('auth:sanctum');
+
+//Comentarios routes
+Route::resource('comentarios', ComentariosController::class)->middleware('auth:sanctum');
+Route::get('comentarios/posts/{id}', [ComentariosController::class, 'getComentarioByPost'])->middleware('auth:sanctum');
