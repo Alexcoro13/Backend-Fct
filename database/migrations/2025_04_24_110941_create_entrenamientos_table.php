@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('entrenamientos', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
             $table->json('ejercicios');
             $table->text('descripcion')->nullable();
             $table->float('duracion');

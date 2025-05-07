@@ -59,7 +59,7 @@ class AuthController extends Controller
                 auth()->user()->tokens()->delete(); // Revoca todos los tokens activos
 
                 return response()->json([
-                    'message' => "Has cerrado sesión con éxito"
+                    'message' => "Successfully logged out"
                 ]);
             }
 
