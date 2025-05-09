@@ -42,14 +42,7 @@ class PostController extends Controller
 
     public function update(Postrequest $request, $id): JsonResponse{
         try{
-            $post = Post::find($id);
-
-            if(!$post){
-                return response()->json([
-                    'data' => null,
-                    'message' => 'Post not found'
-                ], 404);
-            }
+            $post = Post::findOrFail($id);
 
             $post->titulo = $request->titulo;
             $post->texto = $request->texto;

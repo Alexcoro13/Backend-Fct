@@ -1,15 +1,14 @@
 <?php
 
 use App\Http\Controllers\ComentariosController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EntrenamientosController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 // Authentication routes
 Route::post('register', [AuthController::class, 'register']);
@@ -26,3 +25,11 @@ Route::get('entrenamientos/usuario/{id}', [EntrenamientosController::class, 'get
 //Comentarios routes
 Route::resource('comentarios', ComentariosController::class)->middleware('auth:sanctum');
 Route::get('comentarios/posts/{id}', [ComentariosController::class, 'getComentarioByPost'])->middleware('auth:sanctum');
+
+// Usuario Routes
+Route::resource('usuarios', UsuarioController::class)->middleware('auth:sanctum');
+
+//Like Routes
+Route::resource('likes', LikeController::class)->middleware('auth:sanctum');
+Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes'])->middleware('auth:sanctum');
+Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes'])->middleware('auth:sanctum');

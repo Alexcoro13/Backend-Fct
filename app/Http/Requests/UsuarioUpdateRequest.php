@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UsuarioRequest extends FormRequest
+class UsuarioUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,11 @@ class UsuarioRequest extends FormRequest
     {
         return [
             'nombre' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', Rule::email(), 'unique:usuarios'],
-            'password' => ['required', 'string'],
+            'email' => ['nullable', 'string', Rule::email(), 'unique:usuarios'],
             'apellidos' => ['required', 'string', 'max:255'],
-            'nombre_usuario' => ['required', 'string', 'max:255', 'unique:usuarios'],
+            'nombre_usuario' => ['nullable', 'string', 'max:255', 'unique:usuarios'],
+            'visibilidad' => ['nullable', 'boolean'],
+            'estado' => ['nullable', 'boolean'],
         ];
     }
 
@@ -36,14 +37,14 @@ class UsuarioRequest extends FormRequest
         return [
             'nombre.required' => 'El nombre es un dato obligatorio',
             'nombre.max' => 'El nombre ha de tener menos de 255 caracteres',
-            'email.required' => 'El email es un dato obligatorio',
             'email.email' => 'El formato del email debe ser un formato valido',
-            'password.required' => 'La contraseña es un dato obligatorio',
             'apellidos.required' => 'El apellidos es un dato obligatorio',
             'apellidos.max' => 'El apellidos ha de tener menos de 255 caracteres',
             'nombre_usuario.required' => 'El nombre de usuario es un dato obligatorio',
             'nombre_usuario.unique' => 'El nombre de usuario ya existe',
             'nombre_usuario.max' => 'El nombre de usuario ha de tener menos de 255 caracteres',
+            'visibilidad.boolean' => 'La visibilidad debe ser un valor booleano',
+            'estado.boolean' => 'El estado debe ser un valor booleano',
         ];
     }
 }
