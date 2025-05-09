@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: testing
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.TEST_DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.TEST_DB_DATABASE }}
         ports:
           - 5432:5432
         options: >-
@@ -47,28 +47,33 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Copy .env
-        run: cp .env.example .env
-
-      - name: Generate application key
-        run: php artisan key:generate
+      - name: Set environment variables
+        run: |
+          echo "APP_KEY=$(php artisan key:generate --show)" >> .env
+          echo "DB_CONNECTION=${{ secrets.TEST_DB_CONNECTION }}" >> .env
+          echo "DB_HOST=${{ secrets.TEST_DB_HOST }}" >> .env
+          echo "DB_PORT=${{ secrets.TEST_DB_PORT }}" >> .env
+          echo "DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}" >> .env
+          echo "DB_USERNAME=${{ secrets.TEST_DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env
+          echo "SCHEMA=${{ secrets.TEST_DB_SCHEMA }}" >> .env
 
       - name: Database migrations
         env:
-          DB_CONNECTION: pgsql
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
+          DB_CONNECTION: ${{ secrets.TEST_DB_CONNECTION }}
+          DB_HOST: ${{ secrets.TEST_DB_HOST }}
+          DB_PORT: ${{ secrets.TEST_DB_PORT }}
+          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
         run: php artisan migrate --force
 
       - name: Run tests
         env:
-          DB_CONNECTION: pgsql
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_DATABASE: testing
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
+          DB_CONNECTION: ${{ secrets.TEST_DB_CONNECTION }}
+          DB_HOST: ${{ secrets.TEST_DB_HOST }}
+          DB_PORT: ${{ secrets.TEST_DB_PORT }}
+          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
         run: php artisan test --parallel --processes=$(nproc) --verbose
