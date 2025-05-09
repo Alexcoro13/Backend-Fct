@@ -3,6 +3,7 @@
 use App\Http\Controllers\ComentariosController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SeguidoresController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,7 @@ Route::resource('usuarios', UsuarioController::class)->middleware('auth:sanctum'
 Route::resource('likes', LikeController::class)->middleware('auth:sanctum');
 Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes'])->middleware('auth:sanctum');
 Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes'])->middleware('auth:sanctum');
+
+//Seguidores Routes
+Route::resource('seguidores', SeguidoresController::class)->middleware('auth:sanctum');
+Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos'])->middleware('auth:sanctum');
