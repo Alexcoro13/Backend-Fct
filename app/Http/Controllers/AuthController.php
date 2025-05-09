@@ -69,7 +69,8 @@ class AuthController extends Controller
         }
         catch (Throwable $error){
             return response()->json([
-                'message' => 'Se ha producido un error'
+                'message' => 'Se ha producido un error',
+                'error' => $error->getMessage()
             ], 500);
         }
     }
