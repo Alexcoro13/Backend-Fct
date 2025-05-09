@@ -71,7 +71,7 @@ jobs:
           DB_DATABASE: testing
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
-          DB_SCHEMA: testing
+          DB_SCHEMA: public
         run: php artisan migrate --force
 
       - name: Run tests
@@ -82,5 +82,5 @@ jobs:
           DB_DATABASE: testing
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
-          DB_SCHEMA: testing
+          DB_SCHEMA: public
         run: php artisan test --parallel --processes=$(nproc) --verbose
