@@ -2,21 +2,22 @@ name: Laravel Tests
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: ${{ secrets.TEST_DB_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.TEST_DB_DATABASE }}
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testing
         ports:
           - 5432:5432
         options: >-
@@ -24,17 +25,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
           extensions: mbstring, xml, pgsql, pdo_pgsql
-          coverage: xdebug
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
@@ -49,33 +48,37 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "APP_KEY=$(php artisan key:generate --show)" >> .env.testing
-          echo "DB_CONNECTION=${{ secrets.TEST_DB_CONNECTION }}" >> .env.testing
-          echo "DB_HOST=${{ secrets.TEST_DB_HOST }}" >> .env.testing
-          echo "DB_PORT=${{ secrets.TEST_DB_PORT }}" >> .env.testing
-          echo "DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}" >> .env.testing
-          echo "DB_USERNAME=${{ secrets.TEST_DB_USERNAME }}" >> .env.testing
-          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env.testing
-          echo "DB_SCHEMA=${{ secrets.TEST_DB_SCHEMA }}" >> .env.testing
+          echo "APP_KEY=base64:$(php -r 'echo base64_encode(random_bytes(32));')" >> .env.testing
+          echo "DB_CONNECTION=pgsql" >> .env.testing
+          echo "DB_HOST=localhost" >> .env.testing
+          echo "DB_PORT=5432" >> .env.testing
+          echo "DB_DATABASE=testing" >> .env.testing
+          echo "DB_USERNAME=postgres" >> .env.testing
+          echo "DB_PASSWORD=postgres" >> .env.testing
+          echo "DB_SCHEMA=testing" >> .env.testing
+          echo "DB_SEARCH_PATH=testing,public" >> .env.testing
 
-      - name: Database migrations
+      - name: Generate application key
+        run: php artisan key:generate --ansi
+
+      - name: Run database migrations
         env:
-          DB_CONNECTION: ${{ secrets.TEST_DB_CONNECTION }}
-          DB_HOST: ${{ secrets.TEST_DB_HOST }}
-          DB_PORT: ${{ secrets.TEST_DB_PORT }}
-          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          DB_SCHEMA: ${{ secrets.TEST_DB_SCHEMA }}
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_SCHEMA: testing
         run: php artisan migrate --force
 
       - name: Run tests
         env:
-          DB_CONNECTION: ${{ secrets.TEST_DB_CONNECTION }}
-          DB_HOST: ${{ secrets.TEST_DB_HOST }}
-          DB_PORT: ${{ secrets.TEST_DB_PORT }}
-          DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          DB_SCHEMA: ${{ secrets.TEST_DB_SCHEMA }}
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: testing
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_SCHEMA: testing
         run: php artisan test --parallel --processes=$(nproc) --verbose
