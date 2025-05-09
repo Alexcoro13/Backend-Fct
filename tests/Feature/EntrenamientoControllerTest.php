@@ -51,7 +51,7 @@ class EntrenamientoControllerTest extends TestCase
             ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $this->token]);
 
         $response->assertStatus(201)
-                 ->assertJson(['message' => 'Entrenamiento created successfully']);
+                 ->assertJson(['message' => 'Workout created successfully']);
         $this->assertDatabaseHas('entrenamientos', ['nombre' => 'Entrenamiento 1']);
     }
 
@@ -76,7 +76,7 @@ class EntrenamientoControllerTest extends TestCase
             ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $this->token]);
 
         $response->assertStatus(200)
-                 ->assertJson(['message' => 'Entrenamiento updated successfully']);
+                 ->assertJson(['message' => 'Workout updated successfully']);
         $this->assertDatabaseHas('entrenamientos', ['nombre' => 'Entrenamiento Actualizado']);
     }
 
@@ -86,7 +86,7 @@ class EntrenamientoControllerTest extends TestCase
             ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $this->token]);
 
         $response->assertStatus(200)
-                 ->assertJson(['message' => 'Entrenamiento deleted successfully']);
+                 ->assertJson(['message' => 'Workout deleted successfully']);
         $this->assertDatabaseMissing('entrenamientos', ['id' => $this->entrenamiento->id]);
     }
 

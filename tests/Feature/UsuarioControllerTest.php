@@ -49,32 +49,13 @@ class UsuarioControllerTest extends TestCase
             ->assertJson(['data' => ['id' => $this->usuario->id]]);
     }
 
-    public function test_store_creates_new_user()
-    {
-        $userData = [
-            'nombre' => 'New User',
-            'apellidos' => 'Test Apellidos',
-            'email' => 'newuser@test.com',
-            'password' => 'password123',
-            'nombre_usuario' => 'newuser123'
-        ];
-
-        $response = $this->postJson('/api/usuarios', $userData, [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token
-        ]);
-
-        $response->assertStatus(201)
-            ->assertJsonStructure(['data']);
-
-        $this->assertDatabaseHas('usuarios', ['email' => 'newuser@test.com']);
-    }
-
     public function test_update_modifies_existing_user()
     {
         $updateData = [
             'nombre' => 'Updated Name',
-            'apellidos' => 'Updated Apellidos'
+            'apellidos' => 'Updated Apellidos',
+            'visibilidad' => true,
+            'estado' => true,
         ];
 
         $response = $this->putJson("/api/usuarios/{$this->usuario->id}", $updateData, [

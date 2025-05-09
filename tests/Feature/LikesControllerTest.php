@@ -91,6 +91,7 @@ class LikesControllerTest extends TestCase
 
         $like = Like::factory()->create([
             'id_usuario' => $this->user->id,
+            'id_post' => null,
             'id_comentario' => $this->comment->id,
         ]);
 
@@ -131,6 +132,8 @@ class LikesControllerTest extends TestCase
 
     public function test_get_likes_by_comment(): void{
         $like = Like::factory()->create([
+            'id_usuario' => $this->user->id,
+            'id_post' => null,
             'id_comentario' => $this->comment->id,
         ]);
 

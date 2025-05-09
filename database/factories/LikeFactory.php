@@ -24,24 +24,25 @@ class LikeFactory extends Factory
         ];
     }
 
-    public function forIdUsuario()
+    public function forIdUsuario($id_usuario)
     {
         return $this->state([
-            'id_usuario' => $this->faker->randomNumber(),
+            'id_usuario' => $id_usuario,
         ]);
     }
 
-    public function forIdPost()
+
+    public function forIdPost($id_post)
     {
         return $this->state([
-            'id_post' => $this->faker->randomNumber(),
+            'id_post' => $id_post,
         ]);
     }
 
-    public function forIdComentario()
+    public function forIdComentario($id_comentario)
     {
         return $this->state([
-            'id_comentario' => $this->faker->randomNumber(),
+            'id_comentario' => $id_comentario,
         ]);
     }
 }
