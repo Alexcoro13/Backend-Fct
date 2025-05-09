@@ -78,4 +78,4 @@ jobs:
           DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
           DB_SCHEMA: ${{ secrets.TEST_DB_SCHEMA }}
-        run: php artisan test --verbose
+        run: php artisan test --parallel --processes=$(nproc) --verbose
