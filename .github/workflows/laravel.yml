@@ -47,10 +47,6 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Create schema
-        run: |
-          psql -h ${{ secrets.TEST_DB_HOST }} -U ${{ secrets.TEST_DB_USERNAME }} -d ${{ secrets.TEST_DB_DATABASE }} -c "CREATE SCHEMA IF NOT EXISTS testing;"
-
       - name: Set environment variables
         run: |
           echo "APP_KEY=$(php artisan key:generate --show)" >> .env.testing
