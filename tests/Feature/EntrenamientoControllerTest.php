@@ -89,4 +89,12 @@ class EntrenamientoControllerTest extends TestCase
                  ->assertJson(['message' => 'Entrenamiento deleted successfully']);
         $this->assertDatabaseMissing('entrenamientos', ['id' => $this->entrenamiento->id]);
     }
+
+    public function test_get_user_entrenamientos(){
+        $response = $this->getJson("/api/entrenamientos/usuario/{$this->usuario->id}",
+            ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $this->token]);
+
+        $response->assertStatus(200)
+                 ->assertJson(['data' => [['id_usuario' => $this->usuario->id]]]);
+    }
 }

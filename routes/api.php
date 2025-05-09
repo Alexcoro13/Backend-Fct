@@ -21,6 +21,7 @@ Route::resource('posts', PostController::class)->middleware('auth:sanctum');
 
 //Entrenamientos routes
 Route::resource('entrenamientos', EntrenamientosController::class)->middleware('auth:sanctum');
+Route::get('entrenamientos/usuario/{id}', [EntrenamientosController::class, 'getEntrenamientosByUsuario'])->middleware('auth:sanctum');
 
 //Comentarios routes
 Route::resource('comentarios', ComentariosController::class)->middleware('auth:sanctum');

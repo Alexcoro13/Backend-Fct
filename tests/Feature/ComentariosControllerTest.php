@@ -10,6 +10,7 @@ use Tests\TestCase;
 
 class ComentariosControllerTest extends TestCase
 {
+    use RefreshDatabase;
 
     protected Usuario $usuarioPost;
     protected Usuario $usuarioComentario;

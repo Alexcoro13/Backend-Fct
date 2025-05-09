@@ -16,7 +16,7 @@ class EntrenamientosController extends Controller
             return response()->json(['data' => $entrenamientos, 'message' => ''], 200);
         }
         catch (Exception $e){
-            return response()->json(['data'=> null, 'message' => 'Entrenamientos not found', 'error' => $e->getMessage()], 404);
+            return response()->json(['data'=> null, 'message' => 'Workouts not found', 'error' => $e->getMessage()], 404);
         }
     }
 
@@ -27,7 +27,7 @@ class EntrenamientosController extends Controller
             return response()->json(['data' => $entrenamiento, 'message' => ''], 200);
         }
         catch (Exception $e){
-            return response()->json(['data'=> null, 'message' => 'Entrenamiento not found', 'error' => $e->getMessage()], 404);
+            return response()->json(['data'=> null, 'message' => 'Workout not found', 'error' => $e->getMessage()], 404);
         }
     }
 
@@ -43,10 +43,10 @@ class EntrenamientosController extends Controller
 
             $entrenamiento->saveOrFail();
 
-            return response()->json(['data' => $entrenamiento, 'message' => 'Entrenamiento created successfully'], 201);
+            return response()->json(['data' => $entrenamiento, 'message' => 'Workout created successfully'], 201);
         }
         catch (Exception $e){
-            return response()->json(['data'=> null, 'message' => 'Error creating Entrenamiento', 'error' => $e->getMessage()], 500);
+            return response()->json(['data'=> null, 'message' => 'Error creating Workout', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -62,10 +62,10 @@ class EntrenamientosController extends Controller
 
             $entrenamiento->saveOrFail();
 
-            return response()->json(['data' => $entrenamiento, 'message' => 'Entrenamiento updated successfully'], 200);
+            return response()->json(['data' => $entrenamiento, 'message' => 'Workout updated successfully'], 200);
         }
         catch (Exception $e){
-            return response()->json(['data'=> null, 'message' => 'Error updating Entrenamiento', 'error' => $e->getMessage()], 500);
+            return response()->json(['data'=> null, 'message' => 'Error updating Workout', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -75,10 +75,21 @@ class EntrenamientosController extends Controller
 
             $entrenamiento->delete();
 
-            return response()->json(['data' => null, 'message' => 'Entrenamiento deleted successfully'], 200);
+            return response()->json(['data' => null, 'message' => 'Workout deleted successfully'], 200);
         }
         catch (Exception $e){
             return response()->json(['data'=> null, 'message' => 'Error deleting Entrenamiento', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getEntrenamientosByUsuario($id): JsonResponse{
+        try{
+            $entrenamientos = Entrenamiento::where('id_usuario', $id)->get();
+
+            return response()->json(['data' => $entrenamientos, 'message' => ''], 200);
+        }
+        catch (Exception $e){
+            return response()->json(['data'=> null, 'message' => 'Workout not found', 'error' => $e->getMessage()], 404);
         }
     }
 }
