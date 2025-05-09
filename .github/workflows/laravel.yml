@@ -47,16 +47,20 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      - name: Create schema
+        run: |
+          psql -h ${{ secrets.TEST_DB_HOST }} -U ${{ secrets.TEST_DB_USERNAME }} -d ${{ secrets.TEST_DB_DATABASE }} -c "CREATE SCHEMA IF NOT EXISTS testing;"
+
       - name: Set environment variables
         run: |
-          echo "APP_KEY=$(php artisan key:generate --show)" >> .env
-          echo "DB_CONNECTION=${{ secrets.TEST_DB_CONNECTION }}" >> .env
-          echo "DB_HOST=${{ secrets.TEST_DB_HOST }}" >> .env
-          echo "DB_PORT=${{ secrets.TEST_DB_PORT }}" >> .env
-          echo "DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.TEST_DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env
-          echo "DB_SCHEMA=${{ secrets.TEST_DB_SCHEMA }}" >> .env
+          echo "APP_KEY=$(php artisan key:generate --show)" >> .env.testing
+          echo "DB_CONNECTION=${{ secrets.TEST_DB_CONNECTION }}" >> .env.testing
+          echo "DB_HOST=${{ secrets.TEST_DB_HOST }}" >> .env.testing
+          echo "DB_PORT=${{ secrets.TEST_DB_PORT }}" >> .env.testing
+          echo "DB_DATABASE=${{ secrets.TEST_DB_DATABASE }}" >> .env.testing
+          echo "DB_USERNAME=${{ secrets.TEST_DB_USERNAME }}" >> .env.testing
+          echo "DB_PASSWORD=${{ secrets.TEST_DB_PASSWORD }}" >> .env.testing
+          echo "DB_SCHEMA=${{ secrets.TEST_DB_SCHEMA }}" >> .env.testing
 
       - name: Database migrations
         env:
