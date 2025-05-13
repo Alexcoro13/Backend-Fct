@@ -13,29 +13,32 @@ use App\Http\Controllers\EntrenamientosController;
 // Authentication routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'LogIn']);
-Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email');
 
-// Post routes
-Route::resource('posts', PostController::class)->middleware('auth:sanctum');
+Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::resource('posts', PostController::class);
 
 //Entrenamientos routes
-Route::resource('entrenamientos', EntrenamientosController::class)->middleware('auth:sanctum');
-Route::get('entrenamientos/usuario/{id}', [EntrenamientosController::class, 'getEntrenamientosByUsuario'])->middleware('auth:sanctum');
+    Route::resource('entrenamientos', EntrenamientosController::class);
+    Route::get('entrenamientos/usuario/{id}', [EntrenamientosController::class, 'getEntrenamientosByUsuario']);
 
 //Comentarios routes
-Route::resource('comentarios', ComentariosController::class)->middleware('auth:sanctum');
-Route::get('comentarios/posts/{id}', [ComentariosController::class, 'getComentarioByPost'])->middleware('auth:sanctum');
+    Route::resource('comentarios', ComentariosController::class);
+    Route::get('comentarios/posts/{id}', [ComentariosController::class, 'getComentarioByPost']);
 
 // Usuario Routes
-Route::resource('usuarios', UsuarioController::class)->middleware('auth:sanctum');
+    Route::resource('usuarios', UsuarioController::class);
 
 //Like Routes
-Route::resource('likes', LikeController::class)->middleware('auth:sanctum');
-Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes'])->middleware('auth:sanctum');
-Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes'])->middleware('auth:sanctum');
+    Route::resource('likes', LikeController::class);
+    Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes']);
+    Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes']);
 
 //Seguidores Routes
-Route::resource('seguidores', SeguidoresController::class)->middleware('auth:sanctum');
-Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos'])->middleware('auth:sanctum');
+    Route::resource('seguidores', SeguidoresController::class);
+    Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos']);
+});
+
 
