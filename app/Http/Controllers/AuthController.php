@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Email_verification_token;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\UsuarioRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Throwable;
 
 class AuthController extends Controller
@@ -23,7 +27,16 @@ class AuthController extends Controller
             $usuario->apellidos = $request->apellidos;
             $usuario->nombre_usuario = $request->nombre_usuario;
 
+            $email_verification_token = new Email_verification_token();
+            $email_verification_token->email = $usuario->email;
+            $email_verification_token->token = Str::random(64);
+
+            $this->sendVerificationEmail($email_verification_token, $usuario);
+
             $usuario->saveOrFail();
+            $email_verification_token->user_id = $usuario->id;
+            $email_verification_token->saveOrFail();
+
 
             return response()->json(['data' => $usuario], 201);
         }
@@ -73,5 +86,34 @@ class AuthController extends Controller
                 'error' => $error->getMessage()
             ], 500);
         }
+    }
+
+    public function verifyEmail($token): RedirectResponse
+    {
+        $token_email = Email_verification_token::WHERE('token', $token)->first();
+
+        if (!$token_email) {
+            return redirect()->away('http://localhost:3000');
+        }
+
+        $user = Usuario::WHERE('id', $token_email->user_id)->first();
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        $token_email->delete();
+
+        return redirect()->away('http://localhost:3000');
+    }
+
+    protected function sendVerificationEmail(Email_verification_token $email_verification_token, Usuario $usuario)
+    {
+        $verificationUrl = url("/api/verify-email/$email_verification_token->token");
+
+        Mail::send('emails.verify', ['user' => $usuario->nombre, 'url' => $verificationUrl],
+            function ($message) use($usuario) {
+                $message->to($usuario->email);
+                $message->subject('Verify your email address');
+        });
     }
 }

@@ -5,7 +5,6 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SeguidoresController;
 use App\Http\Controllers\UsuarioController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EntrenamientosController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\EntrenamientosController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'LogIn']);
 Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
+Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email');
 
 // Post routes
 Route::resource('posts', PostController::class)->middleware('auth:sanctum');
@@ -38,3 +38,4 @@ Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_like
 //Seguidores Routes
 Route::resource('seguidores', SeguidoresController::class)->middleware('auth:sanctum');
 Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos'])->middleware('auth:sanctum');
+
