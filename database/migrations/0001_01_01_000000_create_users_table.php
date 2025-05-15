@@ -39,7 +39,8 @@ return new class extends Migration
             $table->string('email')->primary();
             $table->foreignId('user_id')->constrained('usuarios', 'id');
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+
+            $table->timestamps();
         });
 
         // Tabla para sesiones
