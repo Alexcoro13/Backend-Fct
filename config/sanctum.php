@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => 60 * 24 * 7,
 
     /*
     |--------------------------------------------------------------------------
@@ -80,5 +80,8 @@ return [
         'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
         'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
     ],
+
+    'prefix' => '',
+    'cookie' => 'laravel_token',
 
 ];
