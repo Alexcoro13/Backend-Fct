@@ -19,7 +19,9 @@ Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->nam
 Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    // Posts routes
     Route::resource('posts', PostController::class);
+    Route::get('posts/latest/{number}', [PostController::class, 'getLatestPosts']);
 
     // Entrenamientos routes
     Route::resource('entrenamientos', EntrenamientosController::class);

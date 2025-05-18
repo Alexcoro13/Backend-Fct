@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // Usuario::factory(10)->create();
         $this->call([
             EjerciciosSeeder::class,
+            PostsSeeder::class,
         ]);
     }
 }

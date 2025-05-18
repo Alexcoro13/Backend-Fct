@@ -73,4 +73,16 @@ class PostController extends Controller
             return response()->json(['message' => 'Error deleting post', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function getLatestPosts($number): JsonResponse
+    {
+        try{
+            $posts = Post::inRandomOrder()->take($number)->get();
+
+            return response()->json(['data' => $posts, 'message' => ''], 200);
+        }
+        catch (Exception $e){
+            return response()->json(['data'=> null, 'message' => 'Error fetching posts', 'error' => $e->getMessage()], 500);
+        }
+    }
 }
