@@ -36,6 +36,14 @@ services:
             - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
         networks:
             - sail
+        # Agregamos el comando para crear el esquema directamente
+        command: >
+            bash -c '
+                docker-entrypoint.sh postgres &
+                until pg_isready; do sleep 1; done;
+                psql -U sail -d laravel -c "CREATE SCHEMA IF NOT EXISTS testing;" -c "GRANT ALL ON SCHEMA testing TO sail;"
+                wait
+            '
         healthcheck:
             test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
             retries: 3
