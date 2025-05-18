@@ -20,7 +20,16 @@ return new class extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
+
+            // Agregar la restricción de clave foránea con cascade
+            $table->foreign('tokenable_id')
+                ->references('id')
+                ->on('usuarios')
+                ->where('tokenable_type', '=', 'App\\Models\\User')
+                ->onDelete('cascade');
         });
+
+
     }
 
     /**

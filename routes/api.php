@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ComentariosController;
+use App\Http\Controllers\EjerciciosController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SeguidoresController;
@@ -18,27 +19,36 @@ Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->nam
 Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    // Posts routes
     Route::resource('posts', PostController::class);
+    Route::get('posts/latest/{number}', [PostController::class, 'getLatestPosts']);
 
-//Entrenamientos routes
+    // Entrenamientos routes
     Route::resource('entrenamientos', EntrenamientosController::class);
     Route::get('entrenamientos/usuario/{id}', [EntrenamientosController::class, 'getEntrenamientosByUsuario']);
 
-//Comentarios routes
+    // Comentarios routes
     Route::resource('comentarios', ComentariosController::class);
     Route::get('comentarios/posts/{id}', [ComentariosController::class, 'getComentarioByPost']);
 
-// Usuario Routes
+    // Usuario Routes
     Route::resource('usuarios', UsuarioController::class);
 
-//Like Routes
+    //Like Routes
     Route::resource('likes', LikeController::class);
     Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes']);
     Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes']);
 
-//Seguidores Routes
+    //Seguidores Routes
     Route::resource('seguidores', SeguidoresController::class);
     Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos']);
+
+    //Ejercicios Routes
+    Route::resource('ejercicios', EjerciciosController::class);
+    Route::get('ejercicios/category/{id}', [EjerciciosController::class, 'get_byCategory']);
+    Route::get('ejercicios/muscleGroup/{muscleGroup}', [EjerciciosController::class, 'get_byMuscleGroup']);
+    Route::get('ejercicios/equipment/{equipment}', [EjerciciosController::class, 'get_byEquipment']);
+    Route::get('ejercicios/force/{force}', [EjerciciosController::class, 'get_byForce']);
 });
 
 

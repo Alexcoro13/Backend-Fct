@@ -21,9 +21,36 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+        depends_on:
+            - pgsql
+    pgsql:
+        image: 'postgres:17'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            POSTGRES_DB: laravel
+            POSTGRES_USER: sail
+            POSTGRES_PASSWORD: localhost
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql/data'
+            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - sail
+        # Agregamos el comando para crear el esquema directamente
+        command: >
+            bash -c '
+                docker-entrypoint.sh postgres &
+                until pg_isready; do sleep 1; done;
+                psql -U sail -d laravel -c "CREATE SCHEMA IF NOT EXISTS testing;" -c "GRANT ALL ON SCHEMA testing TO sail;"
+                wait
+            '
+        healthcheck:
+            test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+            retries: 3
+            timeout: 5s
 networks:
     sail:
         driver: bridge
 volumes:
-    sail-mysql:
+    sail-pgsql:
         driver: local
