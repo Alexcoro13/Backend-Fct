@@ -22,8 +22,10 @@ class PostControllerTest extends TestCase
 
         // Crear usuario y obtener token
         $this->usuario = Usuario::factory()->create();
+
         $response = $this->postJson('/api/login', ['email' => $this->usuario->email, 'password' => 'usuario'], ['Accept' => 'application/json']);
         $this->token = $response->getCookie('laravel_token');
+
 
         // Crear post de prueba
         $this->post = Post::factory()->create([
