@@ -25,6 +25,12 @@ class SeguidoresController extends Controller
                 ], 409);
             }
 
+            if($request->id_seguido == auth()->user()->getAuthIdentifier()) {
+                return response()->json([
+                    'message' => 'You cannot follow yourself',
+                ], 409);
+            }
+
             $seguidores->id_seguidor = auth()->user()->getAuthIdentifier();
             $seguidores->id_seguido = $request->id_seguido;
 
@@ -90,6 +96,25 @@ class SeguidoresController extends Controller
         catch (Exception $e) {
             return response()->json([
                 'message' => 'Error retrieving followed users',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function checkSeguir($idUsuario)
+    {
+        try{
+            $seguido = Seguidores::where('id_seguidor', auth()->user()->getAuthIdentifier())
+                ->where('id_seguido', $idUsuario)
+                ->exists();
+
+            return response()->json([
+                'seguido' => $seguido,
+            ], 200);
+        }
+        catch (Exception $e) {
+            return response()->json([
+                'message' => 'Error checking follow status',
                 'error' => $e->getMessage(),
             ], 500);
         }

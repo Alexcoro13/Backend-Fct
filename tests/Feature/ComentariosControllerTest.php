@@ -23,9 +23,8 @@ class ComentariosControllerTest extends TestCase
         parent::setUp();
         $this->usuarioPost = Usuario::factory()->create();
 
-        $response = $this->postJson('/api/login', ['email' => $this->usuarioPost->email, 'password' => 'usuario'], ["Accept" => 'application/json',])->json();
-
-        $this->token = explode("|", $response['access_token'])[1];
+        $response = $this->postJson('/api/login', ['email' => $this->usuarioPost->email, 'password' => 'usuario'], ['Accept' => 'application/json']);
+        $this->token = $response->getCookie('laravel_token');
 
         $this->usuarioComentario = Usuario::factory()->create();
 
