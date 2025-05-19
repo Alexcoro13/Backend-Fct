@@ -20,11 +20,8 @@ class EntrenamientoControllerTest extends TestCase
         parent::setUp();
 
         $this->usuario = Usuario::factory()->create();
-        $response = $this->postJson('/api/login', ['email' => $this->usuario->email, 'password' => 'usuario'], [
-            'Accept' => 'application/json',
-        ])->json();
-
-        $this->token = explode("|", $response['access_token'])[1];
+        $response = $this->postJson('/api/login', ['email' => $this->usuario->email, 'password' => 'usuario'], ['Accept' => 'application/json']);
+        $this->token = $response->getCookie('laravel_token');
 
         $this->entrenamiento = Entrenamiento::factory()->create(['id_usuario' => $this->usuario->id]);
     }

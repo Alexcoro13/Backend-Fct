@@ -20,11 +20,8 @@ class UsuarioControllerTest extends TestCase
 
         $this->usuario = Usuario::factory()->create();
 
-        $response = $this->postJson('/api/login', ['email' => $this->usuario->email, 'password' => 'usuario'], [
-            'Accept' => 'application/json',
-        ])->json();
-
-        $this->token = explode("|", $response['access_token'])[1];
+        $response = $this->postJson('/api/login', ['email' => $this->usuario->email, 'password' => 'usuario'], ['Accept' => 'application/json']);
+        $this->token = $response->getCookie('laravel_token');
     }
 
     public function test_index_returns_users_list()

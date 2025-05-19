@@ -55,14 +55,25 @@ class AuthController extends Controller
         $usuario = Usuario::where('email', $request->email)->firstOrFail();
 
         $token = $usuario->createToken('auth_token')->plainTextToken;
+        $token = explode("|", $token)[1];
+
+        $cookie = cookie(
+        'laravel_token',        // nombre de la cookie
+        $token,                       // valor: el token Bearer
+        60 * 24 * 7,          // duración en minutos (ej: 7 días)
+        null,                   // path (null para '/')
+        null,                 // dominio
+        true,                 // secure (solo HTTPS)
+        true,                // httpOnly (no accesible por JS)
+        false,                  // raw
+        'Strict'            // SameSite ('Strict' o 'Lax' para proteger CSRF)
+    );
 
         return response()->json(
             [
-                'access_token' => $token,
-                'token_type' => "Bearer",
                 'user' => $usuario
             ]
-        );
+        )->cookie($cookie);
     }
 
     public function logOut(): JsonResponse
@@ -73,7 +84,7 @@ class AuthController extends Controller
 
                 return response()->json([
                     'message' => "Successfully logged out"
-                ]);
+                ])->cookie('laravel_token', '', -1);
             }
 
             return response()->json([

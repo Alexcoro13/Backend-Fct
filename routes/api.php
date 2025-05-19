@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EntrenamientosController;
 
-
 // Authentication routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'LogIn']);
@@ -42,6 +41,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //Seguidores Routes
     Route::resource('seguidores', SeguidoresController::class);
     Route::get('seguidores/seguidos/{id}', [SeguidoresController::class, 'getSeguidos']);
+    Route::get('seguidores/verificarSeguido/{id}', [SeguidoresController::class, 'checkSeguir']);
 
     //Ejercicios Routes
     Route::resource('ejercicios', EjerciciosController::class);
