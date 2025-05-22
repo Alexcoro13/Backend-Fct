@@ -14,6 +14,7 @@ class Ejercicios extends Model
         return [
             'primaryMuscles' => 'array',
             'secondaryMuscles' => 'array',
+            'instructions' => 'array',
             'images' => 'array',
         ];
     }

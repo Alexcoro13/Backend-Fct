@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('equipment')->nullable();
             $table->json('primaryMuscles')->nullable(); // Array in JSON format
             $table->json('secondaryMuscles')->nullable(); // Array in JSON format
-            $table->text('instructions')->nullable();
+            $table->json('instructions')->nullable();
             $table->string('category');
             $table->json('images')->nullable(); // Array in JSON format
         });
