@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ejercicios extends Model
 {
     protected $table = 'ejercicios';
-    protected $primaryKey = 'name';
 
 
     protected function casts(): array

@@ -66,7 +66,7 @@ class AuthController extends Controller
         true,                 // secure (solo HTTPS)
         true,                // httpOnly (no accesible por JS)
         false,                  // raw
-        'Strict'            // SameSite ('Strict' o 'Lax' para proteger CSRF)
+        'None'            // SameSite ('Strict' o 'Lax' para proteger CSRF)
     );
 
         return response()->json(
