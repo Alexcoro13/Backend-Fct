@@ -63,7 +63,7 @@ class AuthController extends Controller
         60 * 24 * 7,          // duración en minutos (ej: 7 días)
         null,                   // path (null para '/')
         null,                 // dominio
-        isset($_ENV['SESSION_SECURE_COOKIE']) | true,                 // secure (solo HTTPS)
+        true,                 // secure (solo HTTPS)
         true,                // httpOnly (no accesible por JS)
         false,                  // raw
         'None'            // SameSite ('Strict' o 'Lax' para proteger CSRF)
