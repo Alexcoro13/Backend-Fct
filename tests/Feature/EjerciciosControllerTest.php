@@ -40,31 +40,39 @@ class EjerciciosControllerTest extends TestCase
 
     public function test_get_byCategory_returns_ejercicio()
     {
-        $response = $this->getJson('/api/ejercicios/category/plyometrics', [
+        $response = $this->getJson('/api/ejercicios/getAll/category', [
             'Accept' => 'application/json',
         ]);
 
         $response->assertStatus(200)
-                    ->assertJsonStructure(['data' => [['name', 'instructions']]]);
+                    ->assertJsonStructure(['data']);
     }
 
     public function test_get_byEquipment_return_ejercicio()
     {
-        $response = $this->getJson('/api/ejercicios/equipment/machine', [
+        $response = $this->getJson('/api/ejercicios/getAll/equipment', [
             'Accept' => 'application/json',
         ]);
 
         $response->assertStatus(200)
-                    ->assertJsonStructure(['data' => [['name', 'instructions']]]);
+                    ->assertJsonStructure(['data']);
     }
 
     public function test_get_byForce_returns_ejercicio()
     {
-        $response = $this->getJson('/api/ejercicios/force/push', [
+        $response = $this->getJson('/api/ejercicios/getAll/force', [
             'Accept' => 'application/json',
         ]);
 
         $response->assertStatus(200)
-                    ->assertJsonStructure(['data' => [['name', 'instructions']]]);
+                    ->assertJsonStructure(['data']);
+    }
+
+    public function test_get_filtered()
+    {
+        $response = $this->getJson('/api/ejercicios/getAll/filter?muscle=biceps');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data' => [['name', 'instructions']]]);
     }
 }
