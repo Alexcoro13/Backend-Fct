@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ejercicios;
 use Exception;
+use Illuminate\Http\Request;
 
 class EjerciciosController extends Controller
 {
@@ -22,7 +23,7 @@ class EjerciciosController extends Controller
 
     public function show($id)
     {
-        try{
+        try {
             $ejercicio = Ejercicios::where('name', 'like', '%' . $id . '%')->firstOrFail();
 
             return response()->json(
@@ -32,11 +33,10 @@ class EjerciciosController extends Controller
                 ],
                 200
             );
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return response()->json(
                 [
-                    'data'=> null, 'message' => 'Ejercicio no encontrado',
+                    'data' => null, 'message' => 'Ejercicio no encontrado',
                     'error' => $e->getMessage()
                 ],
                 404
@@ -44,22 +44,9 @@ class EjerciciosController extends Controller
         }
     }
 
-    public function get_byMuscleGroup($muscleGroup)
+    public function get_AllMuscleGroup()
     {
-        $ejericios = Ejercicios::where('primaryMuscles', 'like', '%' . $muscleGroup . '%')->get();
-
-        return response()->json(
-            [
-                'data' => $ejericios,
-                'message' => 'Ejercicios encontrados'
-            ],
-            200
-        );
-    }
-
-    public function get_byEquipment($equipment)
-    {
-        $ejercicios = Ejercicios::where('equipment', 'like', '%' . $equipment . '%')->get();
+        $ejercicios = Ejercicios::pluck('primaryMuscles')->unique()->values();
 
         return response()->json(
             [
@@ -70,9 +57,9 @@ class EjerciciosController extends Controller
         );
     }
 
-    public function get_byCategory($category)
+    public function get_AllEquipment()
     {
-        $ejercicios = Ejercicios::where('category', 'like', '%' . $category . '%')->get();
+        $ejercicios = Ejercicios::pluck('equipment')->unique()->values();
 
         return response()->json(
             [
@@ -83,8 +70,9 @@ class EjerciciosController extends Controller
         );
     }
 
-    public function get_byForce($name){
-        $ejercicios = Ejercicios::where('force', 'like', '%' . $name . '%')->get();
+    public function get_AllCategory()
+    {
+        $ejercicios = Ejercicios::pluck('category')->unique()->values();
 
         return response()->json(
             [
@@ -93,5 +81,47 @@ class EjerciciosController extends Controller
             ],
             200
         );
+    }
+
+    public function get_AllForce()
+    {
+        $ejercicios = Ejercicios::pluck('force')->unique()->values();
+
+        return response()->json(
+            [
+                'data' => $ejercicios,
+                'message' => 'Ejercicios encontrados'
+            ],
+            200
+        );
+    }
+
+    public function filter_Excersises(Request $request)
+    {
+        $query = Ejercicios::query();
+
+        if ($request->has('force') && $request->force !== '') {
+            $query->where('force', 'like', '%' . $request->force . '%');
+        }
+
+        if ($request->has('category') && $request->category !== '') {
+            $query->where('category', 'like', '%' . $request->category . '%');
+        }
+
+        if ($request->has('equipment') && $request->equipment !== '') {
+            $query->where('equipment', 'like', '%' . $request->equipment . '%');
+        }
+
+        if ($request->has('muscle') && $request->muscle !== '') {
+            $query->where('primaryMuscles', 'like',  '%' . $request->muscle . '%');
+        }
+
+        $ejercicios = $query->get();
+
+        return response()->json([
+            'data' => $ejercicios,
+            'request' => $request->all(),
+            'message' => count($ejercicios) > 0 ? 'Ejercicios encontrados' : 'No se encontraron ejercicios'
+        ], 200);
     }
 }

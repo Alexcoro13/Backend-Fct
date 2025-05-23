@@ -45,10 +45,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     //Ejercicios Routes
     Route::resource('ejercicios', EjerciciosController::class);
-    Route::get('ejercicios/category/{id}', [EjerciciosController::class, 'get_byCategory']);
-    Route::get('ejercicios/muscleGroup/{muscleGroup}', [EjerciciosController::class, 'get_byMuscleGroup']);
-    Route::get('ejercicios/equipment/{equipment}', [EjerciciosController::class, 'get_byEquipment']);
-    Route::get('ejercicios/force/{force}', [EjerciciosController::class, 'get_byForce']);
+    Route::get('ejercicios/getAll/category', [EjerciciosController::class, 'get_AllCategory']);
+    Route::get('ejercicios/getAll/muscles', [EjerciciosController::class, 'get_AllMuscleGroup']);
+    Route::get('ejercicios/getAll/equipment', [EjerciciosController::class, 'get_AllEquipment']);
+    Route::get('ejercicios/getAll/force', [EjerciciosController::class, 'get_AllForce']);
+    Route::get('/ejercicios/getAll/filter', [EjerciciosController::class, 'filter_Excersises']);
 });
 
 
