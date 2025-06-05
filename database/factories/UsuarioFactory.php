@@ -34,6 +34,7 @@ class UsuarioFactory extends Factory
             'estado' => true,
             'visibilidad' => true,
             'remember_token' => Str::random(10),
+            'avatar' => 'https://picsum.photos/200/300?grayscale',
         ];
     }
 

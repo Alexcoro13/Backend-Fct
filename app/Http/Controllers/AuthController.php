@@ -114,7 +114,7 @@ class AuthController extends Controller
 
         $token_email->delete();
 
-        return redirect()->away('http://localhost:3000');
+        return redirect()->away(env('FRONTEND_URL'));
     }
 
     protected function sendVerificationEmail(Email_verification_token $email_verification_token, Usuario $usuario)

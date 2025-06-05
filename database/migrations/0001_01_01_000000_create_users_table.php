@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('visibilidad')->default(true);
             $table->boolean('estado')->default(true);
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('avatar')->default('https://picsum.photos/200/300?grayscale');
 
             $table->rememberToken();
             $table->timestamps();

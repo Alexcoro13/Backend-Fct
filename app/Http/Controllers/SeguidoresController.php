@@ -52,16 +52,18 @@ class SeguidoresController extends Controller
     public function destroy($id): JsonResponse
     {
         try{
-            $seguidores = Seguidores::findOrFail($id);
+            $id_follower = auth()->user()->id;
+            $seguidores = Seguidores::where('id_seguido', $id)->where('id_seguidor', $id_follower)->firstOrFail();
             $seguidores->delete();
 
             return response()->json([
                 'message' => 'Follower deleted successfully',
             ], 200);
         }
-        catch (Exception) {
+        catch (Exception $error) {
             return response()->json([
                 'message' => 'Error deleting follower',
+                'error' => $error->getMessage(),
             ], 500);
         }
     }
@@ -84,10 +86,10 @@ class SeguidoresController extends Controller
         }
     }
 
-    public function getSeguidos(): JsonResponse
+    public function getSeguidos($id): JsonResponse
     {
         try{
-            $seguidos = Seguidores::where('id_seguidor', auth()->user()->getAuthIdentifier())->get();
+            $seguidos = Seguidores::where('id_seguidor', $id)->get();
             return response()->json([
                 'data' => $seguidos,
                 'message' => 'Followed users retrieved successfully',

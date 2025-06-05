@@ -28,7 +28,8 @@ class Usuario extends Authenticatable
         'password',
         'estado',
         'visibilidad',
-        'nombre_usuario'
+        'nombre_usuario',
+        'avatar',
     ];
 
     /**

@@ -20,7 +20,11 @@ class PostFactory extends Factory
         return [
             'titulo' => fake()->sentence(),
             'texto' => fake()->paragraph(),
-            'imagen' => fake()->imageUrl(),
+            'imagen' => fake()->optional(0.5)->randomElement([
+                "https://picsum.photos/3000/1000",
+                "https://picsum.photos/2500/1200",
+                "https://picsum.photos/3200/800"
+            ]),
             'id_usuario' => Usuario::factory(), // Esto creará un usuario automáticamente si no se pasa un id_usuario
         ];
     }

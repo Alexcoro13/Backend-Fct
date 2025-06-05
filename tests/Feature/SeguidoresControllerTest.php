@@ -59,7 +59,7 @@ class SeguidoresControllerTest extends TestCase
         ]);
 
         $response = $this->withCookie('laravel_token', $this->token)
-            ->deleteJson("/api/seguidores/{$seguidor->id}", [], ['Accept' => 'application/json']);
+            ->deleteJson("/api/seguidores/{$this->usuarioASeguir->id}", ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('seguidores', ['id' => $seguidor->id]);

@@ -31,6 +31,15 @@ class UsuarioController extends Controller
         try{
             $usuario = Usuario::findOrFail($id);
 
+            $idToken = auth()->user()->id;
+
+            if($usuario->id == $idToken){
+                $usuario['propietario'] = true;
+            }
+            else{
+                $usuario['propietario'] = false;
+            }
+
             return response()->json([
                 'data' => $usuario,
                 'message' => 'User obtained successfully'
@@ -63,6 +72,11 @@ class UsuarioController extends Controller
 
 
             $usuario->visibilidad = $request->visibilidad;
+
+            if($request->avatar){
+                $usuario->avatar = $request->avatar;
+            }
+
 
             $usuario->saveOrFail();
 
