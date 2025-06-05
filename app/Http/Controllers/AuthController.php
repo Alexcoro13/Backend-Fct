@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Psy\Util\Json;
 use Throwable;
 
 class AuthController extends Controller
@@ -126,5 +127,19 @@ class AuthController extends Controller
                 $message->to($usuario->email);
                 $message->subject('Verify your email address');
         });
+    }
+
+    public function checkUserIsVerified(): JsonResponse
+    {
+        $user = Auth::user();
+
+        if(!$user) {
+            return response()->json(['authenticated' => false], 401);
+        }
+        if (!$user->email_verified_at) {
+            return response()->json(['verified' => false]);
+        }
+
+        return response()->json(['verified' => true]);
     }
 }

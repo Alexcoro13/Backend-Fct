@@ -18,6 +18,9 @@ Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->nam
 Route::get('logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    //Check if the user is authenticated
+    Route::get('verifySession', [AuthController::class, 'checkUserIsVerified']);
+
     // Posts routes
     Route::resource('posts', PostController::class);
     Route::get('posts/latest/{number}', [PostController::class, 'getLatestPosts']);
