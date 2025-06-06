@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     //Like Routes
     Route::resource('likes', LikeController::class);
+    Route::post('likes', [LikeController::class, 'toggleLike']);
     Route::get('likes/post/{id}', [LikeController::class, 'get_post_likes']);
     Route::get('likes/comentario/{id}', [LikeController::class, 'get_comentario_likes']);
 

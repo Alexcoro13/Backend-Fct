@@ -24,12 +24,14 @@ class LikeRequest extends FormRequest
         return [
             'id_post' => [
                 'required_without:id_comentario',
+                'nullable',
                 'prohibits:id_comentario',
                 'integer',
                 'exists:post,id'
             ],
             'id_comentario' => [
                 'required_without:id_post',
+                'nullable',
                 'prohibits:id_post',
                 'integer',
                 'exists:comentarios,id'
