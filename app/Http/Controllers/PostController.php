@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Postrequest;
 use App\Models\Post;
+use Cloudinary\Cloudinary;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -33,32 +34,26 @@ class PostController extends Controller
         $post->titulo = $request->titulo;
         $post->texto = $request->texto;
         $post->id_usuario = auth()->user()->id;
-        $post->imagen = $request->imagen;
+
+
+        if($request->imagen){
+            $cloud = new Cloudinary([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ]
+            ]);
+
+            $upload = $cloud->uploadApi()->upload($request->file('imagen')->getRealPath(), ['quality' => 100]);
+            $secure_url = $upload['secure_url'];
+
+            $post->imagen = $secure_url;
+        }
 
         $post->saveOrFail();
 
         return response()->json(['data' => $post], 201);
-    }
-
-    public function update(Postrequest $request, $id): JsonResponse{
-        try{
-            $post = Post::findOrFail($id);
-
-            $post->titulo = $request->titulo;
-            $post->texto = $request->texto;
-            $post->id_usuario = auth()->user()->id;
-            $post->imagen = $request->imagen;
-
-            $post->saveOrFail();
-
-            return response()->json([
-                'data' => $post,
-                'message' => 'Post updated successfully'
-            ], 200);
-        }
-        catch (Exception $e){
-            return response()->json(['message' => 'Error updating post', 'error' => $e->getMessage()], 500);
-        }
     }
 
     public function destroy($id): JsonResponse{

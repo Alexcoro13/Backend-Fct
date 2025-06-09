@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UsuarioUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Usuario;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Cloudinary\Cloudinary;
 
 class UsuarioController extends Controller
 {
@@ -54,7 +56,7 @@ class UsuarioController extends Controller
         }
     }
 
-    public function update(UsuarioUpdateRequest $request, $id): JsonResponse{
+    public function updateUser(UsuarioUpdateRequest $request, $id): JsonResponse{
         try{
             $usuario = Usuario::findOrFail($id);
 
@@ -84,7 +86,18 @@ class UsuarioController extends Controller
             }
 
             if($request->avatar){
-                $usuario->avatar = $request->avatar;
+                $cloud = new Cloudinary([
+                    'cloud' => [
+                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                        'api_key'    => env('CLOUDINARY_API_KEY'),
+                        'api_secret' => env('CLOUDINARY_API_SECRET'),
+                    ]
+                ]);
+
+                $upload = $cloud->uploadApi()->upload($request->file('avatar')->getRealPath(), ['quality' => 100]);
+                $secure_url = $upload['secure_url'];
+
+                $usuario->avatar = $secure_url;
             }
 
 
@@ -103,29 +116,30 @@ class UsuarioController extends Controller
         }
     }
 
-    public function changePassword($request)
+    public function changePassword(ChangePasswordRequest $request)
     {
-        try{
-            $usuario = Auth()->user();
+        try {
+            $usuario = Usuario::findOrFail(auth()->id());
 
-            Hash::check($request->old_password, $usuario->password) ?
-                $usuario->password = Hash::make($request->new_password) :
+            if (!Hash::check($request->input('old_password'), $usuario->password)) {
                 throw new Exception('Old password does not match');
+            }
 
+            $usuario->password = Hash::make($request->input('new_password'));
             $usuario->saveOrFail();
 
             return response()->json([
                 'data' => $usuario,
                 'message' => 'Password changed successfully'
             ]);
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
                 'message' => 'Error changing password'
             ], 409);
         }
     }
+
 
     public function destroy($id): JsonResponse
     {
