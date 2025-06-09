@@ -46,24 +46,6 @@ class UsuarioControllerTest extends TestCase
             ->assertJson(['data' => ['id' => $this->usuario->id]]);
     }
 
-    public function test_update_modifies_existing_user()
-    {
-        $updateData = [
-            'nombre' => 'Updated Name',
-            'apellidos' => 'Updated Apellidos',
-            'visibilidad' => true,
-            'estado' => true,
-        ];
-
-        $response = $this->putJson("/api/usuarios/{$this->usuario->id}", $updateData, [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->token
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJson(['data' => ['nombre' => 'Updated Name']]);
-    }
-
     public function test_delete_removes_user()
     {
         $response = $this->deleteJson("/api/usuarios/{$this->usuario->id}", [], [

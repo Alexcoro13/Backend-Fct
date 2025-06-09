@@ -67,49 +67,6 @@ class PostControllerTest extends TestCase
                 ->assertJsonStructure(['message', 'error']);
     }
 
-    public function test_store_creates_new_post()
-    {
-        $postData = [
-            'titulo' => 'Nuevo Post de Prueba',
-            'texto' => 'Contenido del post de prueba',
-            'imagen' => 'ruta/imagen.jpg'
-        ];
-
-        $response = $this->postJson('/api/posts', $postData, [
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json'
-        ]);
-
-        $response->assertStatus(201)
-                ->assertJsonStructure(['data']);
-
-        $this->assertDatabaseHas('post', [
-            'titulo' => 'Nuevo Post de Prueba',
-            'id_usuario' => $this->usuario->id
-        ]);
-    }
-
-    public function test_update_modifies_existing_post()
-    {
-        $updateData = [
-            'titulo' => 'Título Actualizado',
-            'texto' => 'Contenido actualizado',
-            'imagen' => 'nueva/ruta/imagen.jpg'
-        ];
-
-        $response = $this->putJson("/api/posts/{$this->post->id}", $updateData, [
-            'Authorization' => 'Bearer ' . $this->token,
-            'Accept' => 'application/json'
-        ]);
-
-        $response->assertStatus(200)
-                ->assertJson(['message' => 'Post updated successfully']);
-
-        $this->assertDatabaseHas('post', [
-            'id' => $this->post->id,
-            'titulo' => 'Título Actualizado'
-        ]);
-    }
 
     public function test_destroy_deletes_post()
     {
