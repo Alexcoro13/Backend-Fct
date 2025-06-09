@@ -6,6 +6,7 @@ use App\Http\Requests\UsuarioUpdateRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Usuario;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -57,8 +58,13 @@ class UsuarioController extends Controller
         try{
             $usuario = Usuario::findOrFail($id);
 
-            $usuario->nombre = $request->nombre;
-            $usuario->apellidos = $request->apellidos;
+            if($request->nombre) {
+                $usuario->nombre = $request->nombre;
+            }
+
+            if($request->apellidos){
+                $usuario->apellidos = $request->apellidos;
+            }
 
             if($request->email){
                 $usuario->email = $request->email;
@@ -68,10 +74,14 @@ class UsuarioController extends Controller
                 $usuario->nombre_usuario = $request->nombre_usuario;
             }
 
-            $usuario->estado = $request->estado;
+            if($request->estado){
+                $usuario->estado = $request->estado;
+            }
 
 
-            $usuario->visibilidad = $request->visibilidad;
+            if($request->visibilidad){
+                $usuario->visibilidad = $request->visibilidad;
+            }
 
             if($request->avatar){
                 $usuario->avatar = $request->avatar;
@@ -89,6 +99,30 @@ class UsuarioController extends Controller
             return response()->json([
                 'error' => $e->getMessage(),
                 'message' => 'Error updating user'
+            ], 409);
+        }
+    }
+
+    public function changePassword($request)
+    {
+        try{
+            $usuario = Auth()->user();
+
+            Hash::check($request->old_password, $usuario->password) ?
+                $usuario->password = Hash::make($request->new_password) :
+                throw new Exception('Old password does not match');
+
+            $usuario->saveOrFail();
+
+            return response()->json([
+                'data' => $usuario,
+                'message' => 'Password changed successfully'
+            ]);
+        }
+        catch (Exception $e){
+            return response()->json([
+                'error' => $e->getMessage(),
+                'message' => 'Error changing password'
             ], 409);
         }
     }

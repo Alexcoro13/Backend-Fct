@@ -18,8 +18,8 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'titulo' => fake()->sentence(),
-            'texto' => fake()->paragraph(),
+            'titulo' => fake()->title(),
+            'texto' => fake()->realText(),
             'imagen' => fake()->optional(0.5)->randomElement([
                 "https://picsum.photos/3000/1000",
                 "https://picsum.photos/2500/1200",

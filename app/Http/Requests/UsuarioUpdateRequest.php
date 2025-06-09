@@ -23,28 +23,27 @@ class UsuarioUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => ['required', 'string', 'max:255'],
+            'nombre' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', Rule::email(), 'unique:usuarios'],
-            'apellidos' => ['required', 'string', 'max:255'],
+            'apellidos' => ['nullable', 'string', 'max:255'],
             'nombre_usuario' => ['nullable', 'string', 'max:255', 'unique:usuarios'],
             'visibilidad' => ['nullable', 'boolean'],
             'estado' => ['nullable', 'boolean'],
-        ];
+            'avatar' => ['nullable', 'string'],
+         ];
     }
 
     public function messages(): array
     {
         return [
-            'nombre.required' => 'El nombre es un dato obligatorio',
             'nombre.max' => 'El nombre ha de tener menos de 255 caracteres',
             'email.email' => 'El formato del email debe ser un formato valido',
-            'apellidos.required' => 'El apellidos es un dato obligatorio',
             'apellidos.max' => 'El apellidos ha de tener menos de 255 caracteres',
-            'nombre_usuario.required' => 'El nombre de usuario es un dato obligatorio',
             'nombre_usuario.unique' => 'El nombre de usuario ya existe',
             'nombre_usuario.max' => 'El nombre de usuario ha de tener menos de 255 caracteres',
             'visibilidad.boolean' => 'La visibilidad debe ser un valor booleano',
             'estado.boolean' => 'El estado debe ser un valor booleano',
+            'avatar.string' => 'El avatar debe ser una cadena de texto',
         ];
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Psy\Util\Json;
+use Laravel\Sanctum\PersonalAccessToken;
 use Throwable;
 
 class AuthController extends Controller
@@ -83,9 +83,10 @@ class AuthController extends Controller
             if (auth()->check()) {
                 auth()->user()->tokens()->delete(); // Revoca todos los tokens activos
 
+
                 return response()->json([
                     'message' => "Successfully logged out"
-                ])->cookie('laravel_token', '', -1);
+                ])->cookie('laravel_token', '', -1)->cookie('sportconnect_session', '', -1);
             }
 
             return response()->json([
@@ -131,9 +132,12 @@ class AuthController extends Controller
 
     public function checkUserIsVerified(): JsonResponse
     {
-        $user = Auth::user();
 
-        if(!$user) {
+        $user = auth()->user();
+
+        $token = PersonalAccessToken::where('tokenable_id', $user->id)->first();
+
+        if(!$token) {
             return response()->json(['authenticated' => false], 401);
         }
         if (!$user->email_verified_at) {
