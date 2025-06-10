@@ -24,6 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     // Posts routes
     Route::resource('posts', PostController::class);
     Route::get('posts/latest/{number}', [PostController::class, 'getLatestPosts']);
+    Route::get('posts/usuario/{id}', [PostController::class, 'getPostsByUser']);
 
     // Entrenamientos routes
     Route::resource('entrenamientos', EntrenamientosController::class);

@@ -80,4 +80,21 @@ class PostController extends Controller
             return response()->json(['data'=> null, 'message' => 'Error fetching posts', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function getPostsByUser($id): JsonResponse
+    {
+        try{
+            $posts = Post::where('id_usuario', $id)->get();
+
+            if(!$posts){
+                return response()->json(['data' => null, 'message' => 'No posts found for this user'], 404);
+            }
+
+            return response()->json(['data' => $posts, 'message' => ''], 200);
+        }
+        catch (Exception $e){
+            return response()->json(['data'=> null, 'message' => 'Error fetching user posts', 'error' => $e->getMessage()], 500);
+        }
+
+    }
 }
