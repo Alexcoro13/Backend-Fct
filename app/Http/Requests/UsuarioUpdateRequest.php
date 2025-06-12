@@ -29,7 +29,7 @@ class UsuarioUpdateRequest extends FormRequest
             'nombre_usuario' => ['nullable', 'string', 'max:255', 'unique:usuarios'],
             'visibilidad' => ['nullable', 'boolean'],
             'estado' => ['nullable', 'boolean'],
-            'avatar' => 'nullable'
+            'avatar' => 'nullable', 'file', 'max:1024'
          ];
     }
 
@@ -43,10 +43,8 @@ class UsuarioUpdateRequest extends FormRequest
             'nombre_usuario.max' => 'El nombre de usuario ha de tener menos de 255 caracteres',
             'visibilidad.boolean' => 'La visibilidad debe ser un valor booleano',
             'estado.boolean' => 'El estado debe ser un valor booleano',
-            'avatar.image' => 'El avatar debe ser una imagen válida',
-            'avatar.mimes' => 'Solo se permiten imágenes JPEG o PNG',
+            'avatar.file' => 'El avatar debe ser una imagen válida',
             'avatar.max' => 'La imagen no debe superar 1MB',
-
         ];
     }
 }

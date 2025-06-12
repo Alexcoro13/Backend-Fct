@@ -12,6 +12,8 @@ use App\Models\Post;
  */
 class ComentarioFactory extends Factory
 {
+    protected static array $postData = [];
+
     /**
      * Define the model's default state.
      *
@@ -19,8 +21,18 @@ class ComentarioFactory extends Factory
      */
     public function definition(): array
     {
+
+        if (!self::$postData) {
+            $json = file_get_contents(database_path('seeders/data/posts.json'));
+            $data = json_decode($json, true);
+            self::$postData = $data['posts'];
+        }
+
+        // Seleccionar uno aleatorio
+        $randomPost = fake()->randomElement(self::$postData);
+
         return [
-            'texto' => fake()->sentence(),
+            'texto' => $randomPost['texto'],
             'id_post' => Post::factory(),
             'id_usuario' => Usuario::factory(),
         ];

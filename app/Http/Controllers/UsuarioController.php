@@ -56,8 +56,10 @@ class UsuarioController extends Controller
         }
     }
 
-    public function updateUser(UsuarioUpdateRequest $request, $id): JsonResponse{
+    public function updateUser(UsuarioUpdateRequest $request): JsonResponse{
         try{
+            $id = auth()->user()->id;
+
             $usuario = Usuario::findOrFail($id);
 
             if($request->nombre) {
@@ -81,7 +83,7 @@ class UsuarioController extends Controller
             }
 
 
-            if($request->visibilidad){
+            if($request->has('visibilidad')){
                 $usuario->visibilidad = $request->visibilidad;
             }
 

@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // Usuario Routes
     Route::resource('usuarios', UsuarioController::class);
-    Route::post('usuarios/update/{id}', [UsuarioController::class, 'updateUser']);
+    Route::post('usuarios/update', [UsuarioController::class, 'updateUser']);
     Route::post('usuarios/changePassword', [UsuarioController::class, 'changePassword']);
 
     //Like Route
