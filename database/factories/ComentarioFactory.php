@@ -23,7 +23,7 @@ class ComentarioFactory extends Factory
     {
 
         if (!self::$postData) {
-            $json = file_get_contents(database_path('seeders/data/posts.json'));
+            $json = file_get_contents(database_path('seeders/data/Posts.json'));
             $data = json_decode($json, true);
             self::$postData = $data['posts'];
         }
