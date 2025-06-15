@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 
 class AuthControllerTest extends TestCase
 {
@@ -26,6 +27,8 @@ class AuthControllerTest extends TestCase
 
     public function test_register_creates_a_new_user()
     {
+        Mail::fake();
+
         $data = [
             'nombre' => 'Test User',
             'apellidos' => 'Test Apellidos',
