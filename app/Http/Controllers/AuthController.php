@@ -20,6 +20,7 @@ class AuthController extends Controller
     public function Register(UsuarioRequest $request): JsonResponse
     {
         try {
+            // Prueba de si el email ya está registrado
             $usuario = new Usuario();
 
             $usuario->nombre = $request->nombre;
